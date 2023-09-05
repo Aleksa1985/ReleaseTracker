@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test;DATABASE_TO_UPPER=false;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1
+    username: sa
+    password: 123
+    driverClassName: org.h2.Driver
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
+      database-platform: org.hibernate.dialect.H2Dialect
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  sql:
+    init:
+      mode: always
