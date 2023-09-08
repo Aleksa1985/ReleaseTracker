@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ReleaseReleaseValidator implements com.lexsoft.releasetracker.validator.ReleaseValidator {
+public class ReleaseValidatorImpl implements com.lexsoft.releasetracker.validator.ReleaseValidator {
 
     private final ReleaseStatusCache releaseStatusCache;
 
