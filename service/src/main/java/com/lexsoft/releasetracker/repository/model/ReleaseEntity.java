@@ -20,9 +20,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "release", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "active"})}, indexes = {@Index(columnList = {"active", })})
-@Index(name = "idx_active", columnList = "active")
-
+@Table(name = "_release", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "active"})},
+        indexes = {
+                @Index(columnList = "active"),
+                @Index(columnList = "uuid")
+        })
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReleaseEntity extends BaseEntity<Long> {
@@ -38,7 +40,7 @@ public class ReleaseEntity extends BaseEntity<Long> {
     private Date releaseDate;
 
     @Builder
-    public ReleaseEntity(Long id, UUID uuid, Date created, Date updated, boolean active, UUID id1, String name, String description, ReleaseStatusEntity releaseStatus, Date releaseDate) {
+    public ReleaseEntity(Long id, UUID uuid, Date created, Date updated, boolean active, String name, String description, ReleaseStatusEntity releaseStatus, Date releaseDate) {
         super(id, uuid, created, updated, active);
         this.name = name;
         this.description = description;

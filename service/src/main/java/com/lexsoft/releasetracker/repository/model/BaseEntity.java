@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -39,6 +38,7 @@ public abstract class BaseEntity<T> implements Serializable {
 	protected void onCreate() {
 		created = new Date();
 		updated = new Date();
+		uuid = UUID.randomUUID();
 		active = true;
 	}
 

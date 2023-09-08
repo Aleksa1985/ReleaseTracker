@@ -38,14 +38,9 @@ public class ReleaseDtoSearch {
     @Schema(description = "Release Status.", example = "Created")
     String status;
 
-    @NotNull
-    @Min(0)
     @Schema(description = "Number of resulting page. Minimum is 0.", example = "2")
     Integer page;
 
-    @NotNull
-    @Min(1)
-    @Max(50)
     @Schema(description = "Number of records on resulting page. Minimum is 1, maximum 50.", example = "20")
     Integer size;
 }

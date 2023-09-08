@@ -1,14 +1,19 @@
 package com.lexsoft.releasetracker.controller;
 
+import static com.lexsoft.releasetracker.dto.constants.ConstantHolder.UUID_VALIDATION_REGEX;
+
 import com.lexsoft.releasetracker.dto.ReleaseDto;
 import com.lexsoft.releasetracker.dto.ReleaseDtoSearch;
 import com.lexsoft.releasetracker.dto.ReleaseWrapper;
+import com.lexsoft.releasetracker.exception.model.ExceptionResponse;
 import com.lexsoft.releasetracker.fascade.ReleaseFascade;
 import com.lexsoft.releasetracker.validator.ReleaseValidator;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -38,13 +43,17 @@ public class ReleaseController {
     @Operation(summary = "Find release By ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Everything went well, release is updated."),
-            @ApiResponse(responseCode = "400", description = "Wrong request format."),
-            @ApiResponse(responseCode = "500", description = "Server error."),
+            @ApiResponse(responseCode = "400", description = "Wrong request format.", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Server error.", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @RequestMapping(method = RequestMethod.GET, path = "/{id}")
     public ResponseEntity<ReleaseDto> findReleaseById(
             @Parameter(in = ParameterIn.PATH, description = "ID in path in UUID format.", example = "123e4567-e89b-12d3-a456-426655440000")
-            @Valid @Pattern(regexp = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}", message = "ID must be in UUID format.")
+            @Valid @Pattern(regexp = UUID_VALIDATION_REGEX, message = "ID must be in UUID format.")
             @PathVariable("id") String releaseId) {
         return ResponseEntity.status(HttpStatus.OK).body(releaseFascade.getRelease(UUID.fromString(releaseId)));
     }
@@ -52,8 +61,12 @@ public class ReleaseController {
     @Operation(summary = "Find Releases filtering by parameters.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Everything went well, You will recieve some response."),
-            @ApiResponse(responseCode = "400", description = "Wrong request format."),
-            @ApiResponse(responseCode = "500", description = "Server error."),
+            @ApiResponse(responseCode = "400", description = "Wrong request format.", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Server error.", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<ReleaseWrapper> findReleases(@Valid ReleaseDtoSearch searchDto) {
@@ -70,8 +83,12 @@ public class ReleaseController {
     @Operation(summary = "Save release.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Everything went well, release is created."),
-            @ApiResponse(responseCode = "400", description = "Wrong request format."),
-            @ApiResponse(responseCode = "500", description = "Server error."),
+            @ApiResponse(responseCode = "400", description = "Wrong request format.", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Server error.", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<ReleaseDto> saveRelease(@Valid @RequestBody ReleaseDto releaseDto) {
@@ -82,14 +99,18 @@ public class ReleaseController {
     @Operation(summary = "Update release.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Everything went well, release is updated."),
-            @ApiResponse(responseCode = "400", description = "Wrong request format."),
-            @ApiResponse(responseCode = "500", description = "Server error."),
+            @ApiResponse(responseCode = "400", description = "Wrong request format.", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Server error.", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @RequestMapping(method = RequestMethod.PUT, path = "/{id}")
     public ResponseEntity<ReleaseDto> updateRelease(
             @Parameter(in = ParameterIn.PATH, description = "ID in path in UUID format.", example = "123e4567-e89b-12d3-a456-426655440000")
-            @Valid @Pattern(regexp = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}", message = "ID must be in UUID format.")
-            @PathVariable String releaseId,
+            @Valid @Pattern(regexp = UUID_VALIDATION_REGEX, message = "ID must be in UUID format.")
+            @PathVariable("id") String releaseId,
             @Valid @RequestBody ReleaseDto releaseDto) {
         releaseValidator.validateReleaseDto(releaseDto);
         return ResponseEntity.status(HttpStatus.OK).body(releaseFascade.updateRelease(UUID.fromString(releaseId), releaseDto));
@@ -98,14 +119,18 @@ public class ReleaseController {
     @Operation(summary = "Delete release.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Everything went well, release is deleted."),
-            @ApiResponse(responseCode = "400", description = "Wrong request format."),
-            @ApiResponse(responseCode = "500", description = "Server error."),
+            @ApiResponse(responseCode = "400", description = "Wrong request format.", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Server error.", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     public ResponseEntity<ReleaseDto> deleteRelease(
             @Parameter(in = ParameterIn.PATH, description = "ID in path in UUID format.", example = "123e4567-e89b-12d3-a456-426655440000")
-            @Valid @Pattern(regexp = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}", message = "ID must be in UUID format.")
-            @PathVariable String releaseId) {
+            @Valid @Pattern(regexp = UUID_VALIDATION_REGEX, message = "ID must be in UUID format.")
+            @PathVariable("id") String releaseId) {
         releaseFascade.deleteRelease(UUID.fromString(releaseId));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

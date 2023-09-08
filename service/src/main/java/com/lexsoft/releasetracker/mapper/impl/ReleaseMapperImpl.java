@@ -3,9 +3,12 @@ package com.lexsoft.releasetracker.mapper.impl;
 import com.lexsoft.releasetracker.dto.ReleaseDto;
 import com.lexsoft.releasetracker.dto.ReleaseWrapper;
 import com.lexsoft.releasetracker.mapper.ReleaseMapper;
+import com.lexsoft.releasetracker.repository.cache.ReleaseStatusCache;
 import com.lexsoft.releasetracker.repository.model.ReleaseEntity;
+import com.lexsoft.releasetracker.utils.DateUtils;
 
-import java.util.List;
+import java.text.ParseException;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,23 +19,37 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ReleaseMapperImpl implements ReleaseMapper {
 
+    private final ReleaseStatusCache releaseStatusCache;
+
     @Override
     public ReleaseDto convertToDto(ReleaseEntity releaseEntity) {
-        return null;
+        return ReleaseDto.builder()
+                .id(releaseEntity.getUuid().toString())
+                .createdAt(DateUtils.dateToString(releaseEntity.getCreated()))
+                .lastUpdateAt(DateUtils.dateToString(releaseEntity.getUpdated()))
+                .name(releaseEntity.getName())
+                .description(releaseEntity.getDescription())
+                .releaseDate(DateUtils.dateToString(releaseEntity.getReleaseDate()))
+                .status(releaseEntity.getReleaseStatus().getName())
+                .build();
     }
 
     @Override
     public ReleaseEntity convertToEntity(ReleaseDto releaseDto) {
-        return null;
-    }
-
-    @Override
-    public List<ReleaseEntity> convertToEntityList(ReleaseWrapper releaseWrapper) {
-        return null;
+       return ReleaseEntity.builder()
+               .description(releaseDto.getDescription())
+               .releaseDate(DateUtils.stringToDate(releaseDto.getReleaseDate()))
+               .name(releaseDto.getName())
+               .releaseStatus(releaseStatusCache.fromCache(releaseDto.getStatus()))
+               .build();
     }
 
     @Override
     public ReleaseWrapper convertToDtos(Page<ReleaseEntity> page) {
-        return null;
+        return ReleaseWrapper.builder()
+                .releases(page.getContent().stream().map(e -> convertToDto(e)).collect(Collectors.toList()))
+                .totalRecords(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .build();
     }
 }

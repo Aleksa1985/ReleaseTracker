@@ -8,12 +8,15 @@ import com.lexsoft.releasetracker.repository.model.ReleaseStatusEntity;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Component;
 
 /**
  * This class will be used for controlling release statuses and holding release statuses in the cache
  * to avoid load over DB level
  */
+@Slf4j
 @Component
 public class ReleaseStatusCache {
 
@@ -46,7 +49,6 @@ public class ReleaseStatusCache {
 
     /**
      * @param statusEntity - statusEntity object
-     * @return ReleaseStatusEntity object from cache
      */
     public void toCache(ReleaseStatusEntity statusEntity){
          cache.put(statusEntity.getName(), statusEntity);
@@ -57,6 +59,13 @@ public class ReleaseStatusCache {
      */
     public Set<String> getAllKeys(){
         return cache.asMap().keySet();
+    }
+
+    /**
+     * @return evict cache.
+     */
+    public void evictAll(){
+        cache.invalidateAll();
     }
 
 }

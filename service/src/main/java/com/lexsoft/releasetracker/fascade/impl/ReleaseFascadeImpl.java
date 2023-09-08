@@ -24,7 +24,7 @@ public class ReleaseFascadeImpl implements ReleaseFascade {
     public ReleaseDto updateRelease(UUID id, ReleaseDto releaseDto) {
         releaseService.getReleaseById(id);
         ReleaseEntity releaseEntity = releaseMapper.convertToEntity(releaseDto);
-        return releaseMapper.convertToDto(releaseService.updateRelease(releaseEntity));
+        return releaseMapper.convertToDto(releaseService.updateRelease(id, releaseEntity));
     }
 
     @Override

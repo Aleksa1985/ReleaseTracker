@@ -8,6 +8,7 @@ import com.lexsoft.releasetracker.repository.cache.ReleaseStatusCache;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,6 @@ public class ReleaseReleaseValidator implements com.lexsoft.releasetracker.valid
         Optional.ofNullable(releaseStatusCache.fromCache(releaseDto.getStatus()))
                 .ifPresentOrElse(status -> {
                 }, () -> list.add(ErrorMessage.builder()
-                        .code(1001)
                         .message("Invalid Release code. Must be one of these: " + releaseStatusCache.getAllKeys().stream()
                                 .collect(Collectors.joining(",")))
                         .build()));
@@ -44,16 +44,16 @@ public class ReleaseReleaseValidator implements com.lexsoft.releasetracker.valid
     @Override
     public void validateReleaseDtoSearch(ReleaseDtoSearch releaseDtoSearch) {
         List<ErrorMessage> list = new ArrayList<>();
-        Optional.ofNullable(releaseStatusCache.fromCache(releaseDtoSearch.getStatus()))
-                .ifPresentOrElse(status -> {
-                }, () -> list.add(ErrorMessage.builder()
-                        .code(1001)
-                        .message("Invalid Release code. Must be one of these: " + releaseStatusCache.getAllKeys().stream()
-                                .collect(Collectors.joining(",")))
-                        .build()));
-        if (!list.isEmpty()) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, list);
+        if(Objects.nonNull(releaseDtoSearch.getStatus())) {
+            Optional.ofNullable(releaseStatusCache.fromCache(releaseDtoSearch.getStatus()))
+                    .ifPresentOrElse(status -> {
+                    }, () -> list.add(ErrorMessage.builder()
+                            .message("Invalid Release code. Must be one of these: " + releaseStatusCache.getAllKeys().stream()
+                                    .collect(Collectors.joining(",")))
+                            .build()));
         }
-
+        if (!list.isEmpty()) {
+           throw new BusinessException(HttpStatus.BAD_REQUEST, list);
+        }
     }
 }

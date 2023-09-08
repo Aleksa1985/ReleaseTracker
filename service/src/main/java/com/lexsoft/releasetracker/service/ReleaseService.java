@@ -18,7 +18,7 @@ public interface ReleaseService {
                                            String status,
                                            Integer page,
                                            Integer size);
-    public ReleaseEntity updateRelease(ReleaseEntity releaseEntity);
+    public ReleaseEntity updateRelease(UUID releaseId, ReleaseEntity releaseEntity);
     public boolean deleteRelease(UUID releaseId);
 
 }

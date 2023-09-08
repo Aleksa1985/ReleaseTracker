@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -20,7 +21,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "status", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "active", "ordering"})})
+@Table(name = "status", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "active", "ordering"})},
+        indexes = {
+                @Index(columnList = "active"),
+                @Index(columnList = "uuid")
+        }
+)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReleaseStatusEntity extends BaseEntity<Long> {
